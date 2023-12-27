@@ -11,11 +11,47 @@
     <script src="https://unpkg.com/bootstrap-table@1.18.2/dist/bootstrap-table.min.js"></script>
     <script src="https://unpkg.com/bootstrap-table@1.18.2/dist/extensions/filter-control/bootstrap-table-filter-control.min.js"></script>
 
+    <style>
+        .navBar{
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+        }
+        .subnav{
+            font-size: medium;   
+        }
+        .navbar-brand{
+            color: black;
+        }
+        .navbar-brand:hover{
+        color: black;
+        }
+    </style>
 </head>
 
     <body>
     <!-- Remove this line the first time you edit this file -->
-     This is the index page of your Django app!
+     <nav class="navbar bg-body-tertiary navBar">
+       <div class="container-fluid">
+         <a class="navbar-brand" href="{% url 'djangoapp:index' %}">Cars Deals🚗</a>
+         <div class="subnav">
+           <a class="navbar-brand" href="{% url 'djangoapp:about' %}">About Us</a>
+           <a class="navbar-brand" href="{% url 'djangoapp:contact' %}">Contact Us</a>
+         </div>
+         {% if user.is_authenticated %}
+         <div class="ml-auto">
+           <a class="h6 mr-2">Welcome, {{user.username}}</a>
+           <a class="btn btn-danger ml-2" type="button" href="{% url 'djangoapp:logout' %}">Logout</a>
+         </div>
+         {% else %}
+         <form class="d-flex" role="search" action="{% url 'djangoapp:login' %}" method="post">
+          {% csrf_token %}
+           <input class="form-control me-2" type="text" placeholder="Username" name="Username" required/>
+           <input class="form-control me-2" type="password" placeholder="Password" name="Password" required/>
+           <button class="btn btn-primary ml-2" type="submit">SignIn</button>
+           <a class="btn btn-primary ml-2" style="color: white; cursor: pointer;" href="{% url 'djangoapp:registration' %}">SignUp</a>
+         </form>
+         {% endif %}
+       </div>
+     </nav>
     <!--Add a nav bar here -->
 
     <!--Add a dealer table here -->

@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>About Us</title>
+  <!-- Bootstrap CSS -->
+  <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<style>
+  .container {
+    padding: 10%;
+  }
+
+  .navBar {
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+  }
+
+  .subnav {
+    font-size: medium;
+  }
+
+  .navbar-brand {
+    color: black;
+  }
+
+  .navbar-brand:hover {
+    color: black;
+  }
+</style>
+
+<body>
+
+  <nav class="navbar bg-body-tertiary navBar">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="{% url 'djangoapp:index' %}">Cars Deals🚗</a>
+      <div class="subnav">
+        <a class="navbar-brand" href="{% url 'djangoapp:about' %}">About Us</a>
+        <a class="navbar-brand" href="{% url 'djangoapp:contact' %}">Contact Us</a>
+      </div>
+      {% if user.is_authenticated %}
+      <div class="ml-auto">
+        <a class="h6 mr-2">Welcome, {{user.username}}</a>
+        <a class="btn btn-danger ml-2" type="button" href="{% url 'djangoapp:logout' %}">Logout</a>
+      </div>
+      {% else %}
+      <form class="d-flex" role="search" action="{% url 'djangoapp:login' %}" method="post">
+        {% csrf_token %}
+        <input class="form-control me-2" type="text" placeholder="Username" name="Username" required />
+        <input class="form-control me-2" type="password" placeholder="Password" name="Password" required />
+        <button class="btn btn-primary ml-2" type="submit">SignIn</button>
+        <a class="btn btn-primary ml-2" style="color: white; cursor: pointer;" href="{% url 'djangoapp:registration' %}">SignUp</a>
+      </form>
+      {% endif %}
+    </div>
+  </nav>
+
+
+  <div class="container">
+    <div class="card text-center">
+      <div class="card-header">
+        <h1>Contact Us</h1>
+      </div>
+      <div class="card-body">
+        <h5 class="card-title">
+        Address: 123 Main Street</h5>
+        <h5>Phone: (123)-456-7890</h5>
+        <h5>E-Mail: fake-email@gmail.com</h5>
+      </div>
+    </div>
+  </div>
+  <!-- Bootstrap JS and Popper.js (optional) -->
+  <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+</body>
+
+</html>

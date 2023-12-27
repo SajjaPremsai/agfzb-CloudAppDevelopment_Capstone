@@ -1,11 +1,121 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    {% load static %}
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sign Up Page</title>
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <style>
+    .container{
+              display: flex;
+              align-items: center;
+              flex-direction: column;
+              justify-content: space-between;
+              margin-top: 20px;
+    }
+    .signup-container {
+    box-shadow: rgba(255, 252, 252, 0.1) 0px 4px 12px;
+    border: 1px solid black;
+    border-radius: 10px;
+    padding: 20px;
+    max-width: 600px;
+    /* Increased max-width for better alignment */
+    margin: auto;
+    margin-top: 100px;
+    }
+    .btncontainer{
+        display: flex;
+        justify-content: space-around;
+        align-items: center;
+    }
+
+  </style>
 </head>
-    <body>
-    <!--Add a registration form here -->
-    </body>
+
+<body>
+
+    <nav class="navbar bg-body-tertiary navBar">
+      <div class="container-fluid">
+        <a class="navbar-brand" href="{% url 'djangoapp:index' %}">Cars Deals🚗</a>
+        <div class="subnav">
+          <a class="navbar-brand" href="{% url 'djangoapp:about' %}">About Us</a>
+          <a class="navbar-brand" href="{% url 'djangoapp:contact' %}">Contact Us</a>
+        </div>
+        {% if user.is_authenticated %}
+        <div class="ml-auto">
+          <a class="h6 mr-2">Welcome, {{user.username}}</a>
+          <a class="btn btn-danger ml-2" type="button" href="{% url 'djangoapp:logout' %}">Logout</a>
+        </div>
+        {% else %}
+        <form class="d-flex" role="search" action="{% url 'djangoapp:login' %}" method="post">
+          {% csrf_token %}
+          <input class="form-control me-2" type="text" placeholder="Username" name="Username" required />
+          <input class="form-control me-2" type="password" placeholder="Password" name="Password" required />
+          <button class="btn btn-primary ml-2" type="submit">SignIn</button>
+          <a class="btn btn-primary ml-2" style="color: white; cursor: pointer;" href="{% url 'djangoapp:registration' %}">SignUp</a>
+        </form>
+        {% endif %}
+      </div>
+    </nav>
+
+  <div class="container signup-container">
+    <h2 class="text-center mb-4">Sign Up</h2>
+
+    <form action="{% url 'djangoapp:registration' %}" method="post">
+        {% csrf_token %}
+      <div class="row mb-3">
+        <div class="col">
+          <label for="fullName" class="form-label">Full Name</label>
+          <input type="text" class="form-control" id="first_name" name="first_name" placeholder="Enter your first name" required>
+        </div>
+        <div class="col">
+          <label for="fullName" class="form-label">Full Name</label>
+          <input type="text" class="form-control" id="last_name" name="last_name" placeholder="Enter your last name" required>
+        </div>
+      </div>
+
+      <div class="row mb-3">
+        <div class="col">
+          <label for="email" class="form-label">Email</label>
+          <input type="email" class="form-control" id="email" name="email" placeholder="Enter your email" required>
+        </div>
+        <div class="col">
+          <label for="username" class="form-label">Username</label>
+          <input type="text" class="form-control" id="username" name="username" placeholder="Choose a username" required>
+        </div>
+      </div>
+
+      <div class="row mb-3">
+         <div class="col">
+           <label for="password" class="form-label">Password</label>
+           <div class="input-group">
+             <input type="password" class="form-control" id="password" name="password" placeholder="Choose a password" required />
+           </div>
+         </div>
+        <div class="col">
+          <label for="confirmPassword" class="form-label">Re-Enter Password</label>
+          <div class="input-group">
+            <input type="password" class="form-control" id="confirmPassword" name="confirmPassword" placeholder="Re-enter your password" required />
+          </div>
+        </div>
+      </div>
+
+      <div class="btncontainer">
+        <button type="submit" class="btn btn-primary btn-submit" style="width: 100%;">
+          Sign Up
+        </button>
+      </div>
+    </form>
+
+    <!-- <div class="mt-3 text-center">
+      <span>Already have an account? <a href="/Login/">Login</a></span>
+    </div> -->
+  </div>
+
+  <!-- Bootstrap JS and Popper.js (required for Bootstrap) -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+
 </html>
