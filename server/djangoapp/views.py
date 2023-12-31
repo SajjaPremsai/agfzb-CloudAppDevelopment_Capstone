@@ -10,6 +10,12 @@ from datetime import datetime
 import logging
 import json
 
+import requests
+
+from .models import CarModel
+
+from .restapis import  analyze_review_sentiments, get_dealers_data, get_dealers_from_cf, get_reviews_from_api, post_request
+
 # Get an instance of a logger
 logger = logging.getLogger(__name__)
 
@@ -92,16 +98,79 @@ def registration_request(request):
 
 # Update the `get_dealerships` view to render the index page with a list of dealerships
 def get_dealerships(request):
-    context = {}
     if request.method == "GET":
+        url = "http://localhost:3000/dealerships/get"
+        dealerships = get_dealers_from_cf(url)
+        
+        print(dealerships)
+        # Pass the dealerships as context to the template
+        context = {'dealer_list': dealerships}
+        # print(context)
+        
+        # Return the rendered template with the dealerships
         return render(request, 'djangoapp/index.html', context)
 
 
-# Create a `get_dealer_details` view to render the reviews of a dealer
-# def get_dealer_details(request, dealer_id):
-# ...
+def dealer_details(request, dealer_id):
+    context={}
+    dealer_details = get_reviews_from_api(dealer_id)
+    context["reviews"]=dealer_details
+    context["dealer_id"] = dealer_id
+    dealerdetails = requests.get(f"http://localhost:3000/dealerships/{dealer_id}").json()
+    context["dealer_details"] = dealerdetails
+    for i in context["reviews"]:
+        # sentiment=analyze_review_sentiments(review.get("review", ""))
+        i["sentiment"] = analyze_review_sentiments(i["review"])
+    # context["dealer_details"]["sen"]
 
-# Create a `add_review` view to submit a review
-# def add_review(request, dealer_id):
-# ...
+    
+    return render(request, 'djangoapp/dealer_details.html', context)
+
+def add_review(request, dealer_id):
+    context = {}
+    # If it is a GET request, just render the add_review page
+    if request.method == 'GET':
+        url = "http://localhost:3000/dealerships/"
+        url = f"{url}?id={dealer_id}"
+        # Get dealers from the URL
+        # dealer_details = get_dealers_data(url)
+        context = {
+            "dealer_id": dealer_id,
+            "dealer_name": "hii",
+            "cars": CarModel.objects.all()
+        }
+        print(CarModel.objects.all())
+        #print(context)
+        return render(request, 'djangoapp/add_review.html', context)
+    elif request.method == 'POST':
+        if (request.user.is_authenticated):
+            review = dict()
+            review["id"]=0#placeholder
+            review["name"]=request.POST["name"]
+            review["dealership"]=dealer_id
+            review["review"]=request.POST["content"]
+            if ("purchasecheck" in request.POST):
+                review["purchase"]=True
+            else:
+                review["purchase"]=False
+            print(request.POST["car"])
+            if review["purchase"] == True:
+                car_parts=request.POST["car"].split("|")
+                review["purchase_date"]=request.POST["purchase_date"] 
+                review["car_make"]=car_parts[0]
+                review["car_model"]=car_parts[1]
+                review["car_year"]=car_parts[2]
+
+            else:
+                review["purchase_date"]=None
+                review["car_make"]=None
+                review["car_model"]=None
+                review["car_year"]=None
+            json_result = post_request("http://localhost:5000/api/post_review", review, dealerId=dealer_id)
+            print(json_result)
+            if "error" in json_result:
+                context["message"] = "ERROR: Review was not submitted."
+            else:
+                context["message"] = "Review was submited"
+        return redirect("djangoapp:dealer_details", dealer_id=dealer_id)
 

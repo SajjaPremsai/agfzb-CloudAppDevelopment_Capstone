@@ -28,3 +28,9 @@
        console.log(err);
      });
  }
+
+main({
+  "COUCH_URL": "https://control.cloud-object-storage.cloud.ibm.com/v2/endpoints",
+  "IAM_API_KEY": "lQK4AYTSTQoZeA--BQtSMGiXn8n8HRNlcAKR-UWO9Sl8",
+  "COUCH_USERNAME": "premsai0809@gmail.com"
+})

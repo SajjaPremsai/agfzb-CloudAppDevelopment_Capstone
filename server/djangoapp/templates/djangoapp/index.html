@@ -52,9 +52,60 @@
          {% endif %}
        </div>
      </nav>
-    <!--Add a nav bar here -->
+    <!--Add a nav bar here --> 
+  <!-- Navbar content -->
 
-    <!--Add a dealer table here -->
+  <!-- Add a dealer table here -->
+  <main role="main" class="container pt-3">
+    <table class="table" id="table" data-filter-control="true">
+      <thead>
+        <tr>
+          <th data-field="id">ID</th>
+          <th data-field="full_name">Dealership Name</th>
+          <th data-field="city">City</th>
+          <th data-field="address">Address</th>
+          <th data-field="zip">ZIP Code</th>
+          <th data-field="state" data-filter-control="select">State</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for dealer in dealer_list %}
+        <tr>
+         <td>
+           {{ forloop.counter }}
+         </td>
+          <td><a href="{% url 'djangoapp:dealer_details' dealer.id %}">
+              {{ dealer.full_name }}</a></td>
+          <td>
+            {{ dealer.city }}
+          </td>
+          <td>
+            {{ dealer.address }}
+          </td>
+          <td>
+            {{ dealer.zip }}
+          </td>
+          <td>
+            {{ dealer.st }}
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </main>
+
+  <!-- Bootstrap Table and Bootstrap Table Filter Control scripts -->
+  <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.16.0/bootstrap-table.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.16.0/extensions/filter-control/bootstrap-table-filter-control.min.js"></script>
+
+  <!-- Initialize Bootstrap Table with filtering -->
+  <script>
+    $(document).ready(function() {
+      $('#table').bootstrapTable();
+    });
+  </script>
 
     </body>
 

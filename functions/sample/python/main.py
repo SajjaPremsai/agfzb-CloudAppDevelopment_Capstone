@@ -26,10 +26,16 @@ def main(param_dict):
         )
         print(f"Databases: {client.all_dbs()}")
     except CloudantException as cloudant_exception:
-        print("unable to connect")
+        print(f"unable to connect  {cloudant_exception}")
         return {"error": cloudant_exception}
     except (requests.exceptions.RequestException, ConnectionResetError) as err:
         print("connection error")
         return {"error": err}
 
     return {"dbs": client.all_dbs()}
+
+main({
+    "COUCH_URL": "https://1019b037-d6c8-437c-bdca-d8f02dd27dd5-bluemix.cloudantnosqldb.appdomain.cloud",
+    "IAM_API_KEY": "NzfXNIB_O7o4ozaVk1TWRKvvqQL7w4K1gm5L-Df38Zv2",
+    "COUCH_USERNAME": "1019b037-d6c8-437c-bdca-d8f02dd27dd5-bluemix"
+})
