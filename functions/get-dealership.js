@@ -89,6 +89,32 @@ app.get('/dealerships/:id', (req, res) => {
     });
 });
 
+app.get('/dealerships/state/:state', (req, res) => {
+    const dealershipState = req.params.state; // Note: The state parameter is a string, not an integer
+
+    const queryOptions = {
+        selector: {
+            state: dealershipState,
+        },
+        limit: 1, // Limit to one document as the ID should be unique
+    };
+
+    db.find(queryOptions, (err, body) => {
+        if (err) {
+            console.error('Error fetching dealership by state:', err);
+            res.status(500).json({ error: 'An error occurred while fetching dealership by state.' });
+        } else {
+            const dealership = body.docs[0];
+            if (dealership) {
+                res.json(dealership);
+            } else {
+                res.status(404).json({ error: 'Dealership not found' });
+            }
+        }
+    });
+});
+
+
 
 app.listen(port, () => {
     console.log(`Server is running on port ${port}`);
